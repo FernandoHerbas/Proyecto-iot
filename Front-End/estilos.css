@@ -1,0 +1,43 @@
+*{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+}
+
+body {
+        background: #EAEDED;
+        font-family: Arial,sans-serif;
+}
+
+a {
+        text-decoration: none;
+}
+
+.contenedor {
+        margin: auto;
+        width: 90%;
+        max-width: 1000px;
+}
+
+.titulo{
+        background:#232F3E;
+        border:3px solid black;
+        text-decoration: underline;
+        color: white;
+        text-align: center;
+        padding: 10px;
+}
+
+main article{
+        background: white;
+        margin: 20px 0;
+        padding: 20px;
+        height: 1000px;
+}
+
+/*Enlaces del NAV*/
+.menu {
+        background: #232F3E;
+        padding: 5vm 0;
+        margin-bottom: 20vm;
+}
