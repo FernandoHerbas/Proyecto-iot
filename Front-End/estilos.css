@@ -16,16 +16,16 @@ a {
 .contenedor {
         margin: auto;
         width: 90%;
-        max-width: 1000px;
+        max-width: 1200px;
 }
 
 .titulo{
         background:#232F3E;
-        border:3px solid black;
-        text-decoration: underline;
+        /*border:3px solid black;
+        text-decoration: underline;*/
         color: white;
         text-align: center;
-        padding: 10px;
+        padding: 5px;
 }
 
 main article{
@@ -38,6 +38,55 @@ main article{
 /*Enlaces del NAV*/
 .menu {
         background: #232F3E;
-        padding: 5vm 0;
-        margin-bottom: 20vm;
+        padding: 5px 0;
+        margin-bottom: 20px;
+}
+
+.menu .contenedor-botones-menu{
+        /*display: flex;*/
+        display: none;
+        justify-content: space-between;
+}
+
+.menu .contenedor-botones-menu button{
+        font-size: 20px;
+        color:white;
+        padding: 10px 20px;
+        border: 1px solid transparent;
+        display: inline-block;
+        cursor: pointer;
+        background: none;
+}
+
+.menu .contenedor-botones-menu button:hover{
+        border: 1px solid rgba(255, 255,255,.4);
+}
+
+.menu .contenedor-botones-menu .btn-menu-cerrar {
+        display: none;
+}
+
+.menu .contenedor-botones-menu .btn-menu-cerrar.activo {
+        display: inline-block;
+}
+
+.menu .contenedor-enlaces-nav {
+        flex-grow: 1; 
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 10px;
+}
+
+.menu .contenedor-enlaces-nav .pestanias a{
+        color: #ccc;
+        border: 1px solid transparent;
+        padding: 10px;
+        border-radius: 10px;
+        font-size: 20px;
+        text-decoration: none;
+}
+
+.menu .contenedor-enlaces-nav .pestanias a:hover{
+        border: 1px solid rgba(255, 255,255,.4);
 }
