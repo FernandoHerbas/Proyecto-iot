@@ -2,8 +2,8 @@
 
     $obj_conexion = iniciarConexion("root","42737740","pruebasDomotica","localhost");
     $obj_conexion->set_charset("utf8");
-    $temp = "26.1";
-    $serie = "LM35";
+    $temp = $_POST['temp'];
+    $serie = $_POST['serie'];
     $sql = "INSERT INTO `mediciones` (`id`, `fecha`, `Temperatura`, `serie`) VALUES (NULL,CURRENT_TIMESTAMP, '$temp', '$serie' )";
     $datosDeInsercion = $obj_conexion->query($sql);
     if(!$datosDeInsercion){
