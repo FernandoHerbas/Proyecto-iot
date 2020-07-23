@@ -4,7 +4,7 @@
 
     if(empty($_POST["user"]) || empty($_POST["mail"]) || empty($_POST["password"]) || empty($_POST["rPassword"]))  
     {  
-       echo '<script>alert("los campos son obligatorios.")</script>';  
+       echo '<script>alert("Los campos son obligatorios.")</script>';  
     }  
 
     //Me traigo los datos del formulario de html
