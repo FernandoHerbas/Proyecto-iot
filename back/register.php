@@ -17,10 +17,10 @@
     $rPassword  = mysqli_real_escape_string($conexion, $_POST['rPassword']);
 
     //Aca inserto los datos en la BD, pero antes verifico ciertas cosas
-    if(strlen($passwordLength)<9){
-        die("La contraseña debe tener mas de 8 caracteres.");
+    if(strlen($passwordLength)<8){
+        die("La contraseña debe tener al menos 8 caracteres.");
     }
-    if(usuarioNoEstaRegistrado($conexion,$user) && mailNoEstaRegistrado($conexion,$mail)){
+    if(usuarioNoEstaRegistrado($conexion,$user) && mailNoEstaRegistrado($conexion,$mail) && lasContraseniasCoinciden($conexion,$password,$rPassword)){
         $query = "INSERT INTO `usuarios` (`id`, `fecha`, `usuario`, `contraseña`, `mail`) VALUES (NULL, '$dia', '$user', '$password', '$mail')";
         $datosDeInsercion = $conexion->query($query);
         if(!$datosDeInsercion){
