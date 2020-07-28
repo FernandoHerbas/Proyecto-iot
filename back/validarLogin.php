@@ -11,30 +11,29 @@
 
     $user       = mysqli_real_escape_string($conexion,$_POST['user']);
     $password   = mysqli_real_escape_string($conexion,$_POST['password']);  
-  //  $password   = password_hash($password, PASSWORD_DEFAULT);  
 
     $query = "SELECT * from usuarios WHERE usuario='$user'";
     $resultado = $conexion->query($query);
 
     if($resultado->num_rows > 0){
-        $_SESSION['logged']='yes';
         $fila = $resultado->fetch_array(MYSQLI_ASSOC);
         $passwordDb = $fila['contraseña'];
         if(password_verify($password,$passwordDb)){
-            echo $id    = $fila['id'];
+            /*echo $id    = $fila['id'];
             echo "<br>";
             echo $mail  = $fila['mail'] ;
-            echo "<br>";
+            echo "<br>";*/
+            $_SESSION['logged']='yes';
             $_SESSION['user']   = $user; 
             $_SESSION['userId'] = $id;
             $_SESSION['mail']   = $mail;
         }
         else
             die("Las contraseña es invalida.");
-        $conexion->close();
     }
     else{
         $_SESSION['logged']='no';
         echo "Problem";
     }
+    $conexion->close();
 ?>
