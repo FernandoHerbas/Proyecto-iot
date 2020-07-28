@@ -15,7 +15,7 @@ a {
 
 .contenedor {
         margin: auto;
-        width: 80%;
+        width: 90%;
         max-width: 1200px;
 }
 
@@ -88,5 +88,26 @@ main article{
 }
 
 .menu .contenedor-enlaces-nav .pestanias a:hover{
+        border: 1px solid rgba(255, 255,255,.4);
+}
+
+/*Contenedor luces*/
+.contenedor .contenedor-botones-luz{
+        text-align: center;
+}
+.contenedor .btn-luz {
+        font-size: 60px;
+        color: #fff;
+        padding: 10px 0px;
+        margin:60px;
+        border: 1px solid transparent;
+        display: inline-block;
+        cursor: pointer;
+        background:gray;
+        width: 100px;
+        border-radius: 50px;
+        text-decoration: none;
+}
+.contenedor .contenedor-botones-luz button:hover{
         border: 1px solid rgba(255, 255,255,.4);
 }

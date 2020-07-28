@@ -27,6 +27,7 @@
             $_SESSION['user']   = $user; 
             $_SESSION['userId'] = $id;
             $_SESSION['mail']   = $mail;
+            header("Location:../front/panel.html");
         }
         else
             die("Las contraseña es invalida.");
