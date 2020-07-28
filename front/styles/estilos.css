@@ -107,6 +107,7 @@ main article{
         width: 100px;
         border-radius: 50px;
         text-decoration: none;
+        outline:none;
 }
 .contenedor .contenedor-botones-luz button:hover{
         border: 1px solid rgba(255, 255,255,.4);

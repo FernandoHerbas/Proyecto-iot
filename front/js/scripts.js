@@ -1,8 +1,8 @@
-function cambiarColorLed(){
-    var ledColor = document.getElementById('btn-luz-1').style.backgroundColor;
+function cambiarColorLed(idLed){
+    var ledColor = document.getElementById(idLed).style.backgroundColor;
     if(ledColor == 'gray'){
-        document.getElementById('btn-luz-1').style.backgroundColor='blue';
+        document.getElementById(idLed).style.backgroundColor='blue';
     }else{
-        document.getElementById('btn-luz-1').style.backgroundColor='gray';
+        document.getElementById(idLed).style.backgroundColor='gray';
     }
 }
