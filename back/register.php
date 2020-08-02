@@ -1,5 +1,5 @@
 <?php
-    require_once('conectarServidor.php');
+    require_once('lib/conectarServidor.php');
     $conexion = iniciarConexion("root","42737740","pruebasDomotica","localhost");
 
     if(empty($_POST["user"]) || empty($_POST["mail"]) || empty($_POST["password"]) || empty($_POST["rPassword"]))  
