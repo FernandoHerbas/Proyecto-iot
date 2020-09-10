@@ -1,5 +1,9 @@
 package Server;
 
+import Domain.Controllers.PanelController;
+import Spark.utils.BooleanHelper;
+import Spark.utils.HandlebarsTemplateEngineBuilder;
+import spark.Spark;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 
 public class Router {
@@ -9,8 +13,17 @@ public class Router {
         Router.engine = HandlebarsTemplateEngineBuilder
                 .create()
                 .withDefaultHelpers()
+                .withHelper("isTrue", BooleanHelper.isTrue)
+                .build();
     }
     public static void init(){
+        Router.initEngine();
+        Spark.staticFileLocation("/public");
+        Router.configure();
+    }
 
+    private static void configure(){
+        PanelController panelController = new PanelController();
+        Spark.get("/panel", panelController::mostrar, Router.engine);
     }
 }
