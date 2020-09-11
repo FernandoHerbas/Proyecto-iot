@@ -1,10 +1,13 @@
 package Server;
 
 import Domain.Controllers.PanelController;
+import Socket.WebSocketHandler;
 import Spark.utils.BooleanHelper;
 import Spark.utils.HandlebarsTemplateEngineBuilder;
 import spark.Spark;
 import spark.template.handlebars.HandlebarsTemplateEngine;
+
+import static spark.Spark.webSocket;
 
 public class Router {
     private static HandlebarsTemplateEngine engine;
@@ -24,6 +27,7 @@ public class Router {
 
     private static void configure(){
         PanelController panelController = new PanelController();
+        webSocket("/Socket", WebSocketHandler.class);
         Spark.get("/panel", panelController::mostrar, Router.engine);
     }
 }
