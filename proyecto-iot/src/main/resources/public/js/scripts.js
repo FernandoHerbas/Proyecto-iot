@@ -1,4 +1,4 @@
-const socket = new WebSocket("ws://localhost:9000/Socket");
+const socket = new WebSocket("ws://192.168.0.250:9000/Socket");
 
 socket.onopen = function(openEvent) {
             console.log("WebSocket OPEN: " + JSON.stringify(openEvent, null, 4));
