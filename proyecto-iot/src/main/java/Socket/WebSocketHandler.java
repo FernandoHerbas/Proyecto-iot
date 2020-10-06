@@ -1,22 +1,46 @@
 package Socket;
 
+import Domain.Controllers.Cliente;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.json.JSONObject;
+import org.omg.CORBA.UserException;
 
 import java.io.IOException;
-import java.util.*;
+import java.nio.channels.SeekableByteChannel;
+import java.util.Queue;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.CopyOnWriteArraySet;
 
 @WebSocket
 public class WebSocketHandler {
-    private static final int MAX_COUNT = 5;
-    private static final int INITIAL_WAIT_TIME = 1000;
-    private static final int POLLING_INTERVAL = 2000;
+
+    private static int id=1;
+
+    @OnWebSocketConnect
+    public void onConnect(Session session) throws Exception {
+        Cliente cliente = new Cliente();
+        cliente.setSession(session);
+        cliente.setId(id);
+        Broker.addCliente(cliente);
+    }
+
+
+    @OnWebSocketClose
+    public void onClose(Session user, int statusCode, String reason) {
+        Broker.removeCliente(user);
+        //.broadcastMessage(sender = "Server", msg = (username + " left the chat"));
+    }
+
+    @OnWebSocketMessage
+    public void message(Session session, String message) throws IOException {
+        Broker.broadcastMessage(session,message);
+    }
+
+    /*
 
     private static final Queue<Session> sessions = new ConcurrentLinkedQueue<>();
 
@@ -55,7 +79,7 @@ public class WebSocketHandler {
             }
 
         }, INITIAL_WAIT_TIME, POLLING_INTERVAL);
-        */
+
     }
 
     private void stopService() {
@@ -86,4 +110,6 @@ public class WebSocketHandler {
                     }
                 });
     }
+
+     */
 }
