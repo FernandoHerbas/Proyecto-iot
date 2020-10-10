@@ -1,5 +1,4 @@
 const socket = new WebSocket("ws://192.168.0.250:9000/Socket");
-
 socket.onopen = function(openEvent) {
             console.log("WebSocket OPEN: " + JSON.stringify(openEvent, null, 4));
         };
@@ -26,10 +25,17 @@ function cambiarColorLed(idLed){
     var ledColor = document.getElementById(idLed).style.backgroundColor;
     if(ledColor == '' || ledColor == 'gray'){
         document.getElementById(idLed).style.backgroundColor='blue';
-        enviarDatosAlServer(idLed);
+        //enviarDatosAlServer(idLed);
+        var data = JSON.stringify({
+            "nombre": "PC",
+            "tipo":"Publisher",
+            "cola":"ColaLeds",
+            "mensaje":idLed
+        });
+        enviarDatosAlServer(data);
     }else if(ledColor == 'blue'){
         document.getElementById(idLed).style.backgroundColor='gray';
-        enviarDatosAlServer(idLed);
+        //enviarDatosAlServer(idLed);
     }
 }
 

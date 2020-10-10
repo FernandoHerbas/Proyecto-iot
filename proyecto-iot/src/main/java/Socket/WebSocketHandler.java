@@ -1,38 +1,25 @@
 package Socket;
 
-import Domain.Controllers.Cliente;
+import Domain.Controllers.Broker;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
-import org.json.JSONObject;
-import org.omg.CORBA.UserException;
 
 import java.io.IOException;
-import java.nio.channels.SeekableByteChannel;
-import java.util.Queue;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 @WebSocket
 public class WebSocketHandler {
 
-    private static int id=1;
-
     @OnWebSocketConnect
     public void onConnect(Session session) throws Exception {
-        Cliente cliente = new Cliente();
-        cliente.setSession(session);
-        cliente.setId(id);
-        Broker.addCliente(cliente);
+        Broker.initMessage(session);
     }
-
 
     @OnWebSocketClose
     public void onClose(Session user, int statusCode, String reason) {
         Broker.removeCliente(user);
-        //.broadcastMessage(sender = "Server", msg = (username + " left the chat"));
     }
 
     @OnWebSocketMessage
