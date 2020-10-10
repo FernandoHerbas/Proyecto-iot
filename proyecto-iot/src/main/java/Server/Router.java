@@ -1,5 +1,6 @@
 package Server;
 
+import Domain.Controllers.CustomerController;
 import Domain.Controllers.PanelController;
 import Socket.WebSocketHandler;
 import Spark.utils.BooleanHelper;
@@ -27,7 +28,12 @@ public class Router {
 
     private static void configure(){
         PanelController panelController = new PanelController();
+        CustomerController customerController = new CustomerController();
+        Thread scheduler = new Thread(customerController);
+
         webSocket("/Socket", WebSocketHandler.class);
         Spark.get("/panel", panelController::mostrar, Router.engine);
+        scheduler.start();
+
     }
 }
