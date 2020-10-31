@@ -2,17 +2,17 @@ package Domain.Entities;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class ColaLeds implements Cola{
     private List<Subscriber> suscriptores;
-    private List<String> mensajes;
-    private int indice;
     private static ColaLeds colaLeds = null;
+    private Queue<String> mensajes;
 
     private ColaLeds(){
         this.suscriptores = new ArrayList<>();
-        this.mensajes = new ArrayList<>();
-        this.indice = 0;
+        this.mensajes = new ConcurrentLinkedQueue<String>();
     }
 
     public static ColaLeds instancia() {
@@ -25,15 +25,11 @@ public class ColaLeds implements Cola{
     @Override
     public void queue(String mensaje){
         this.mensajes.add(mensaje);
-        this.indice++;
     }
 
     @Override
     public String dequeue() {
-        this.indice = this.indice - 1;
-        String msj = mensajes.get(this.indice);
-        this.mensajes.remove(this.indice);
-        return msj;
+        return this.mensajes.poll();
     }
 
     @Override

@@ -25,17 +25,22 @@ function cambiarColorLed(idLed){
     var ledColor = document.getElementById(idLed).style.backgroundColor;
     if(ledColor == '' || ledColor == 'gray'){
         document.getElementById(idLed).style.backgroundColor='blue';
-        //enviarDatosAlServer(idLed);
         var data = JSON.stringify({
             "nombre": "PC",
             "tipo":"Publisher",
             "cola":"ColaLeds",
-            "mensaje":idLed
+            "mensaje":idLed + "on"
         });
         enviarDatosAlServer(data);
     }else if(ledColor == 'blue'){
         document.getElementById(idLed).style.backgroundColor='gray';
-        //enviarDatosAlServer(idLed);
+        var data = JSON.stringify({
+             "nombre": "PC",
+             "tipo":"Publisher",
+             "cola":"ColaLeds",
+             "mensaje":idLed + "off"
+        });
+        enviarDatosAlServer(data);
     }
 }
 

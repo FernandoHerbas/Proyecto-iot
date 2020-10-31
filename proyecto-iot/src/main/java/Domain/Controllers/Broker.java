@@ -5,10 +5,13 @@ import Domain.DTO.*;
 import Domain.Entities.*;
 import Domain.Repositories.Daos.DAOMemoria;
 import Domain.Repositories.Repositorio;
+import Server.Router;
+import Socket.WebSocketHandler;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
 import org.eclipse.jetty.websocket.api.Session;
+import spark.Spark;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,12 +24,13 @@ public class Broker {
     static int id = 1; //Used for creating the next username
 
     public static void broadcastMessage(Session session,String message) throws IOException {
-       ClienteDTO clienteDTO = mapearStringACliente(message);
-       ColaLeds colaLeds = ColaLeds.instancia();
+        ClienteDTO clienteDTO = mapearStringACliente(message);
+        ColaLeds colaLeds = ColaLeds.instancia();
         if(clienteDTO.getTipo().equals("Publisher")){
             Publisher publisher = new Publisher();
             publisher.setCola(colaLeds);
             publisher.publicar(clienteDTO.mensaje);
+            System.out.println(clienteDTO.mensaje);
             session.getRemote().sendString("Mensaje encolado correctamente en" + clienteDTO.getCola());
         }
         else if(clienteDTO.getTipo().equals("Subscriber")){
@@ -35,7 +39,7 @@ public class Broker {
             subscriber.setSession(session);
             subscriber.setColaPerteneciente(colaLeds);
             colaLeds.addSubscriber(subscriber);
-            session.getRemote().sendString("Subscrito a "+ clienteDTO.getCola());
+            session.getRemote().sendString("Suscrito a "+ clienteDTO.getCola());
         }
     }
 

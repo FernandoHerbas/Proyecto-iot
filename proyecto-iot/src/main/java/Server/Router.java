@@ -8,6 +8,8 @@ import Spark.utils.HandlebarsTemplateEngineBuilder;
 import spark.Spark;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 
+import java.util.Timer;
+
 import static spark.Spark.webSocket;
 
 public class Router {
@@ -29,11 +31,13 @@ public class Router {
     private static void configure(){
         PanelController panelController = new PanelController();
         CustomerController customerController = new CustomerController();
-        Thread scheduler = new Thread(customerController);
+        Timer task = new Timer();
 
         webSocket("/Socket", WebSocketHandler.class);
         Spark.get("/panel", panelController::mostrar, Router.engine);
-        scheduler.start();
+
+        //Ejecuto cada 1 seg para enviar mensajes a los suscriptores
+        task.schedule(customerController,10000,1000);
 
     }
 }
