@@ -1,34 +1,39 @@
 package Domain.Controllers;
 
+import Domain.Arduino.AdapterComunicadorArduino;
+import Domain.Arduino.AdapterMQTTComunicadorArduino;
+import Domain.MQTT.ClienteMQTT;
+import Domain.MQTT.ClienteMQTTBuilder;
+import Domain.MQTT.PublisherMQTT;
 import com.google.gson.Gson;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
+import org.eclipse.paho.client.mqttv3.MqttException;
 import spark.Request;
 import spark.Response;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.concurrent.TimeoutException;
 
 public class ColasController {
 
-    public Response recibirValores(Request request, Response response) throws IOException, TimeoutException {
+    public Response recibirValores(Request request, Response response) throws MqttException {
         Gson gson = new Gson();
+
+        ClienteMQTT clienteMQTT = new ClienteMQTTBuilder()
+                .conIPDestino("test.mosquitto.org")
+                .conPuertoDestino(1883)
+                .construir();
+
+        PublisherMQTT publisher = new PublisherMQTT(clienteMQTT);
+
+        AdapterComunicadorArduino adapter = new AdapterMQTTComunicadorArduino(publisher);
 
         EstadoLed estadoLed = gson.fromJson(request.body(),EstadoLed.class);
 
-        ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost("localhost");
-        try (Connection connection = factory.newConnection();
-            Channel channel = connection.createChannel()) {
-            channel.exchangeDeclare("test-exchange", "topic",true);
+        adapter.encenderLuz(estadoLed.value);
 
-            String message = estadoLed.value;
-            channel.basicPublish("test-exchange", "mqtt-subscription-ESP8266Clientqos0", null, message.getBytes("UTF-8"));
-            System.out.println(" [x] Sent '" + message + "'");
-        }
-        response.body("Llegue");
+        publisher.getCliente().desconectarYCerrar();
+
         return response;
     }
 

@@ -31,7 +31,7 @@ public class Router {
 
     private static void configure() throws Exception {
         Router.rutas();
-        Router.tareas();
+        //Router.tareas();
     }
 
     private static void rutas() {
