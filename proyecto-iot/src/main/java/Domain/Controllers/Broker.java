@@ -50,6 +50,13 @@ public class Broker {
     public static void removeCliente(Session session) {
     }
 
+    public static void iniciarColas() throws Exception {
+        ColaRabbit colaLeds = new ColaRabbit();
+        colaLeds.setCola("LED");
+        colaLeds.setServidor("localhost");
+        colaLeds.iniciarCola();
+    }
+
     private static ClienteDTO mapearStringACliente(String message){
        // GsonBuilder gsonBuilder = new GsonBuilder();
        // gsonBuilder.registerTypeAdapter(TipoCliente.class, new ClienteTipoAdapter().nullSafe());
