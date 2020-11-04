@@ -6,9 +6,6 @@ import Domain.MQTT.ClienteMQTT;
 import Domain.MQTT.ClienteMQTTBuilder;
 import Domain.MQTT.PublisherMQTT;
 import com.google.gson.Gson;
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.ConnectionFactory;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import spark.Request;
 import spark.Response;
@@ -20,17 +17,17 @@ public class ColasController {
         Gson gson = new Gson();
 
         ClienteMQTT clienteMQTT = new ClienteMQTTBuilder()
-                .conIPDestino("test.mosquitto.org")
+                .conIPDestino("localhost")
                 .conPuertoDestino(1883)
                 .construir();
 
         PublisherMQTT publisher = new PublisherMQTT(clienteMQTT);
 
-        AdapterComunicadorArduino adapter = new AdapterMQTTComunicadorArduino(publisher);
+        AdapterComunicadorArduino arduino = new AdapterMQTTComunicadorArduino(publisher);
 
         EstadoLed estadoLed = gson.fromJson(request.body(),EstadoLed.class);
 
-        adapter.encenderLuz(estadoLed.value);
+        arduino.controlLed(estadoLed.value);
 
         publisher.getCliente().desconectarYCerrar();
 

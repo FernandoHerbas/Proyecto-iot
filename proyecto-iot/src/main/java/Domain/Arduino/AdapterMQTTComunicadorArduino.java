@@ -29,12 +29,12 @@ public class AdapterMQTTComunicadorArduino implements AdapterComunicadorArduino{
     }
 
     @Override
-    public void apagarLuz(String valor) {
-        armarMensajeYEnviar("luces/leds", valor);
+    public void controlRgb(String valor) {
+        armarMensajeYEnviar("luces/rgb", valor);
     }
 
     @Override
-    public void encenderLuz(String valor) {
-        armarMensajeYEnviar("luces/leds", valor);
+    public void controlLed(String valor) {
+        armarMensajeYEnviar("luces/led", valor);
     }
 }
