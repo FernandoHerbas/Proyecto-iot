@@ -1,15 +1,12 @@
 package Server;
 
-import Domain.Controllers.Broker;
 import Domain.Controllers.ColasController;
-import Domain.Controllers.CustomerController;
 import Domain.Controllers.PanelController;
 import Spark.utils.BooleanHelper;
 import Spark.utils.HandlebarsTemplateEngineBuilder;
+import spark.ModelAndView;
 import spark.Spark;
 import spark.template.handlebars.HandlebarsTemplateEngine;
-
-import java.util.Timer;
 
 import static spark.Spark.webSocket;
 
@@ -31,7 +28,7 @@ public class Router {
 
     private static void configure() throws Exception {
         Router.rutas();
-        //Router.tareas();
+        Spark.get("/*", (request,response)-> new ModelAndView(null,"../public/index.html"));
     }
 
     private static void rutas() {
@@ -42,14 +39,5 @@ public class Router {
         //webSocket("/Socket", WebSocketHandler.class);
         Spark.get("/panel", panelController::mostrar, Router.engine);
         Spark.post("/cola/led",colasController::recibirValores);
-    }
-
-    private static void tareas() throws Exception {
-        //CustomerController customerController = new CustomerController();
-        //Ejecuto cada 1 seg para enviar mensajes a los suscriptores
-        //task.schedule(customerController,10000,1000);
-
-        Broker.iniciarColas();
-
     }
 }

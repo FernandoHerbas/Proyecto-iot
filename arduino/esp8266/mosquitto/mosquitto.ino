@@ -48,9 +48,26 @@ void setup_wifi() {
 }
 
 void callback(char* topic, byte* payload, unsigned int length) {
+  String value;
   for (int i = 0; i < length; i++) {
-    Serial.print((char)payload[i]);
+      value += (char)payload[i];
   }
+  if(value.equals("led1on"))
+      Serial.write('a');
+  if(value.equals("led1off"))
+      Serial.write('A');
+  if(value.equals("led2on"))
+      Serial.write('b');
+  if(value.equals("led2off"))
+      Serial.write('B');
+  if(value.equals("led3on"))
+      Serial.write('c');
+  if(value.equals("led3off"))
+      Serial.write('C');
+  if(value.equals("led4on"))
+      Serial.write('d');
+  if(value.equals("led4off"))
+      Serial.write('D');
 }
 
 void reconnect() {

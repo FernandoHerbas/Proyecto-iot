@@ -1,24 +1,12 @@
 package Domain.Controllers;
-
-import Domain.Adapters.ClienteTipoAdapter;
+/*
 import Domain.DTO.*;
 import Domain.Entities.*;
-import Domain.Repositories.Daos.DAOMemoria;
-import Domain.Repositories.Repositorio;
-import Server.Router;
-import Socket.WebSocketHandler;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
 import org.eclipse.jetty.websocket.api.Session;
-import spark.Spark;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class Broker {
     static int id = 1; //Used for creating the next username
@@ -69,3 +57,4 @@ public class Broker {
     }
 
 }
+*/

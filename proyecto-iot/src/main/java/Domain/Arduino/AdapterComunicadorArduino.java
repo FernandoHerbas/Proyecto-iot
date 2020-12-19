@@ -1,6 +1,7 @@
 package Domain.Arduino;
 
 public interface AdapterComunicadorArduino {
-    public void controlRgb(String valor);
-    public void controlLed(String valor);
+    void publicar(String valor);
+    void controlRgb(String valor);
+    void controlLed(String valor);
 }
