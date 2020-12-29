@@ -539,6 +539,19 @@
 							"propertyLabel": {
 								"$ref": "AAAAAAF2fR9xKoO3uZU="
 							}
+						},
+						{
+							"_type": "UMLNoteView",
+							"_id": "AAAAAAF2rI9SA42Zpz4=",
+							"_parent": {
+								"$ref": "AAAAAAFF+qBtyKM79qY="
+							},
+							"font": "Arial;13;0",
+							"left": 552,
+							"top": 128,
+							"width": 185,
+							"height": 161,
+							"text": "topics:\nliving/leds\nliving/rgb"
 						}
 					]
 				},

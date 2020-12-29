@@ -4,9 +4,10 @@ import spark.Spark;
 import spark.debug.DebugScreen;
 
 public class Server {
-    public static void main(String args[]) throws Exception {
+    public static void main(String args[]) {
         Spark.port(9000);
-        Router.init();
+        Broker.init();
+        //Router.init();
         DebugScreen.enableDebugScreen();
     }
 }

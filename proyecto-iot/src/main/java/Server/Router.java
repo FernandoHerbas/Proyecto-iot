@@ -2,13 +2,11 @@ package Server;
 
 import Domain.Controllers.ColasController;
 import Domain.Controllers.PanelController;
+import Socket.WebSocketHandler;
 import Spark.utils.BooleanHelper;
 import Spark.utils.HandlebarsTemplateEngineBuilder;
-import spark.ModelAndView;
 import spark.Spark;
 import spark.template.handlebars.HandlebarsTemplateEngine;
-
-import static spark.Spark.webSocket;
 
 public class Router {
     private static HandlebarsTemplateEngine engine;
@@ -20,15 +18,15 @@ public class Router {
                 .withHelper("isTrue", BooleanHelper.isTrue)
                 .build();
     }
-    public static void init() throws Exception {
+    public static void init() {
         Router.initEngine();
         Spark.staticFileLocation("/public");
         Router.configure();
     }
 
-    private static void configure() throws Exception {
+    private static void configure() {
         Router.rutas();
-        Spark.get("/*", (request,response)-> new ModelAndView(null,"../public/index.html"));
+        //Spark.get("/*", (request,response)-> new ModelAndView(null,"../public/index.html"));
     }
 
     private static void rutas() {
@@ -36,8 +34,8 @@ public class Router {
         ColasController colasController   = new ColasController();
 
 
-        //webSocket("/Socket", WebSocketHandler.class);
+        Spark.webSocket("/Socket", WebSocketHandler.class);
         Spark.get("/panel", panelController::mostrar, Router.engine);
-        Spark.post("/cola/led",colasController::recibirValores);
+        //Spark.post("/cola/led",colasController::recibirValores);
     }
 }

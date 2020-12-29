@@ -1,6 +1,7 @@
 package Socket;
 
-import Domain.Controllers.Broker;
+
+import Server.Broker;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
@@ -12,21 +13,26 @@ import java.io.IOException;
 @WebSocket
 public class WebSocketHandler {
 
+    private String sender, msg;
+
     @OnWebSocketConnect
-    public void onConnect(Session session) throws Exception {
-        Broker.initMessage(session);
+    public void onConnect(Session user) throws Exception {
+        String username = "User" + Broker.nextUserNumber++;
+        Broker.userUsernameMap.put(user, username);
+        Broker.initMessage(user,"Welcome");
+        //Broker.broadcastMessage(sender = "Server", msg = (username + " joined the chat"));
     }
 
     @OnWebSocketClose
     public void onClose(Session user, int statusCode, String reason) {
-        Broker.removeCliente(user);
+        //String username = Broker.userUsernameMap.get(user);
+        Broker.userUsernameMap.remove(user);
+        //Broker.broadcastMessage(sender = "Server", msg = (username + " left the socket"));
     }
 
     @OnWebSocketMessage
-    public void message(Session session, String message) throws IOException {
-        Broker.broadcastMessage(session,message);
+    public void onMessage(Session user, String message) {
+        Broker.broadcastMessage(sender = Broker.userUsernameMap.get(user), msg = message);
     }
-
-    //private static final Queue<Session> sessions = new ConcurrentLinkedQueue<>();
 
 }

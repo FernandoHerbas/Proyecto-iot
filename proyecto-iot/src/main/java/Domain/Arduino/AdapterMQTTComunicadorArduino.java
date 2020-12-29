@@ -39,7 +39,7 @@ public class AdapterMQTTComunicadorArduino implements AdapterComunicadorArduino{
 
     @Override
     public void publicar(String valor) {
-        armarMensajeYEnviar(topic, valor);
+        armarMensajeYEnviar(this.topic, valor);
     }
 
     @Override
