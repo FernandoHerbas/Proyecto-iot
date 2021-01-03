@@ -99,7 +99,6 @@ void loop() {
   }
   client.loop();
   //Serial.println(msg);
-  
   /*long now = millis();
   if (now - lastMsg > 2000) {
     lastMsg = now;

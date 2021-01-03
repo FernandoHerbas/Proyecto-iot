@@ -1,6 +1,6 @@
 package Server;
 
-import Domain.Controllers.ColasController;
+import Domain.Controllers.BotonController;
 import Domain.Controllers.PanelController;
 import Socket.WebSocketHandler;
 import Spark.utils.BooleanHelper;
@@ -31,11 +31,11 @@ public class Router {
 
     private static void rutas() {
         PanelController panelController = new PanelController();
-        ColasController colasController   = new ColasController();
+        BotonController botonController   = new BotonController();
 
 
         Spark.webSocket("/Socket", WebSocketHandler.class);
-        Spark.get("/panel", panelController::mostrar, Router.engine);
-        //Spark.post("/cola/led",colasController::recibirValores);
+        //Spark.get("/panel", panelController::mostrar, Router.engine);
+        Spark.post("/living/luces",botonController::estadoBotones);
     }
 }
