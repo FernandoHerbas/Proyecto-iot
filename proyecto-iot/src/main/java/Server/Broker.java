@@ -20,13 +20,16 @@ public class Broker {
     // this map is shared between sessions and threads, so it needs to be thread-safe (http://stackoverflow.com/a/2688817)
     public static Map<Session, String> userUsernameMap = new ConcurrentHashMap<>();
     public static int nextUserNumber = 1; //Used for creating the next username
-    private static final String ENVIRONMENT_PROPERTY = "enviroment";
+    private static final String ENVIRONMENT_PROPERTY = "environment";
     private static final String DEVICE_PROPERTY = "device";
     private static final String MESSAGE_PROPERTY = "message";
+    private static ClienteMQTT clienteMQTT;
+    private static ClienteMQTT clienteMQTT2;
 
     public static void init() {
         Spark.staticFileLocation("/public");
         Spark.webSocket("/Socket", WebSocketHandler.class);
+        configure();
         suscripciones();
         Spark.init();
     }
@@ -54,10 +57,6 @@ public class Broker {
 
     private static void enviarAArduino(String environment,String device, JsonObject msg) throws Exception {
         String message = "";
-        ClienteMQTT clienteMQTT = new ClienteMQTTBuilder()
-                .conIPDestino("localhost")
-                .conPuertoDestino(1883)
-                .construir();
 
         PublisherMQTT publisher = new PublisherMQTT(clienteMQTT);
 
@@ -66,7 +65,8 @@ public class Broker {
         arduino.setTopic(environment + '/' + device);
 
         if(device.equals("leds")) {
-            message = msg.get("led").getAsString();
+            message = msg.get("values").getAsString();
+            System.out.println(msg);
             if (message.equals("led0"))
                 arduino.publicar("a");
             if (message.equals("led1"))
@@ -76,17 +76,14 @@ public class Broker {
             if (message.equals("led3"))
                 arduino.publicar("d");
         }
-        System.out.println(message);
-        publisher.getCliente().desconectarYCerrar();
+        if(device.equals("rgb")){
+            System.out.println(msg);
+        }
     }
 
     private static void suscripciones() {
         try{
-            ClienteMQTT clienteMQTT = new ClienteMQTTBuilder()
-                    .conIPDestino("localhost")
-                    .conPuertoDestino(1883)
-                    .construir();
-            SubscriberMQTT subscriber = new SubscriberMQTT(clienteMQTT);
+            SubscriberMQTT subscriber = new SubscriberMQTT(clienteMQTT2);
             ListenerArduino listenerArduino = new ListenerArduino();
             subscriber.suscribir("living/botones", listenerArduino);
             /***
@@ -102,18 +99,33 @@ public class Broker {
         }
     }
     //Sends a message from one user to all users, along with a list of current usernames
-    public static void enviarMensajes(String enviroment,String device, String message) {
+    public static void enviarMensajes(String environment,String device, String message) {
         userUsernameMap.keySet().stream().filter(Session::isOpen).forEach(session -> {
             try {
                 session.getRemote().sendString(String.valueOf(new JSONObject()
-                        .put("enviroment", enviroment)
-                        .put("device",device)
-                        .put("message", message)
+                        .put(ENVIRONMENT_PROPERTY, environment)
+                        .put(DEVICE_PROPERTY,device)
+                        .put(MESSAGE_PROPERTY, message)
                 ));
             } catch (Exception e) {
                 e.printStackTrace();
             }
         });
+    }
+
+    private static void configure() {
+        try{
+            clienteMQTT = new ClienteMQTTBuilder()
+                    .conIPDestino("localhost")
+                    .conPuertoDestino(1883)
+                    .construir();
+            clienteMQTT2 = new ClienteMQTTBuilder()
+                    .conIPDestino("localhost")
+                    .conPuertoDestino(1883)
+                    .construir();
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

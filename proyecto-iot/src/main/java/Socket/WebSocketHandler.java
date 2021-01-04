@@ -31,8 +31,10 @@ public class WebSocketHandler {
     }
 
     @OnWebSocketMessage
-    public void onMessage(Session user, String message) {
+    public void onMessage(Session user, String message) throws IOException {
         Broker.broadcastMessage(sender = Broker.userUsernameMap.get(user), msg = message);
+        //System.out.println("Got: " + message);   // Print message
+        //user.getRemote().sendString(message); // and send it back
     }
 
 }

@@ -16,7 +16,7 @@ public class ListenerArduino implements IMqttMessageListener {
         this.state = mqttMessage.toString();
         String values[] = topic.split("/",2);
         Broker.enviarMensajes(values[0],values[1],this.state);
-        System.out.println("enviroment: " +values[0]);
+        System.out.println("environment: " +values[0]);
         System.out.println("device: " +values[1]);
         System.out.println(topic + ": " + this.state);
     }
