@@ -56,7 +56,8 @@ public class Broker {
     }
 
     private static void enviarAArduino(String environment,String device, JsonObject msg) throws Exception {
-        String message = "";
+        String message;
+        JsonObject jsonObject;
 
         PublisherMQTT publisher = new PublisherMQTT(clienteMQTT);
 
@@ -67,17 +68,14 @@ public class Broker {
         if(device.equals("leds")) {
             message = msg.get("values").getAsString();
             System.out.println(msg);
-            if (message.equals("led0"))
-                arduino.publicar("a");
-            if (message.equals("led1"))
-                arduino.publicar("b");
-            if (message.equals("led2"))
-                arduino.publicar("c");
-            if (message.equals("led3"))
-                arduino.publicar("d");
+            arduino.publicar(message + "*");
         }
-        if(device.equals("rgb")){
-            System.out.println(msg);
+        if(device.equals("rgb")) {
+            jsonObject   = msg.get("values").getAsJsonObject();
+            String red   = jsonObject.get("red").getAsString();
+            String green = jsonObject.get("green").getAsString();
+            String blue  = jsonObject.get("blue").getAsString();
+            arduino.publicar(red + "," + green + "," + blue + "*");
         }
     }
 
