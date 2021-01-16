@@ -19,7 +19,7 @@ public class WebSocketHandler {
     public void onConnect(Session user) throws Exception {
         String username = "User" + Broker.nextUserNumber++;
         Broker.userUsernameMap.put(user, username);
-        Broker.initMessage(user,"Welcome");
+        Broker.initMessage(user,"{'message':'Welcome'}");
         //Broker.broadcastMessage(sender = "Server", msg = (username + " joined the chat"));
     }
 

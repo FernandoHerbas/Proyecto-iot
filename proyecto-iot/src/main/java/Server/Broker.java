@@ -65,7 +65,7 @@ public class Broker {
 
         arduino.setTopic(environment + '/' + device);
 
-        if(device.equals("leds")) {
+        if(device.equals("leds") || device.equals("control")) {
             message = msg.get("values").getAsString();
             System.out.println(msg);
             arduino.publicar(message + "*");
