@@ -5,27 +5,36 @@
 /// constants won't change
 #define DEBOUNCE_TIME 50 //debounce time to 50 milliseconds
 #define MAX_CANT_CHAR 32
-const int BUTTON_PIN_01 = 7; // the number of the pushbutton pin
+const int BUTTON_PIN_01 = A0; // the number of the pushbutton pin
 const int LED_PIN_01   =  4; // the number of the LED pin
-const int BUTTON_PIN_02 = 8; // the number of the pushbutton pin
-const int LED_PIN_02    = 5; // the number of the LED pin
+const int BUTTON_PIN_02 = A1; // the number of the pushbutton pin
+const int LED_PIN_02    = 7; // the number of the LED pin
+const int BUTTON_PIN_03 = A2; 
+const int LED_PIN_03    = 8;
+const int BUTTON_PIN_04 = A3; 
+const int LED_PIN_04    = 12;  
 
 /**** Pines RGB ******************************/
-const int LED_PIN_RGB_01 = 3;
+const int LED_PIN_RGB_01 = 5;
 const int LED_PIN_RGB_02 = 6;
 const int LED_PIN_RGB_03 = 9;
 /**** Pin entrada audio **********************/
-#define AUDIO_IN A0
+#define AUDIO_IN A4
 
  // create ezButton object that attach to pins;
 ezButton button01(BUTTON_PIN_01); 
 ezButton button02(BUTTON_PIN_02); 
-
+ezButton button03(BUTTON_PIN_03); 
+ezButton button04(BUTTON_PIN_04); 
 
 // variables will change:
-int ledState[2] = {LOW,LOW};   // the current state of LEDs
+int ledState[4] = {HIGH,HIGH,HIGH,HIGH};   // the current state of LEDs
 int onSerialRead[2] = {0,0};
 int rgbEnable = LOW;
+int rgbAudioEnable = LOW;
+int rgbPanelEnable = LOW;
+unsigned long previousMillis = 0; 
+const long intervalAudioRGB = 30;
 
 /**** Declaracion de funciones ***************/
 String checkConnection(String&);
@@ -84,8 +93,12 @@ String checkConnection(String &queue) {
 void configButtonsAndLeds() {
   pinMode(LED_PIN_01, OUTPUT);   // set arduino pin to output mode
   pinMode(LED_PIN_02, OUTPUT);
+  pinMode(LED_PIN_03, OUTPUT);
+  pinMode(LED_PIN_04, OUTPUT);
   button01.setDebounceTime(DEBOUNCE_TIME);
   button02.setDebounceTime(DEBOUNCE_TIME);
+  button03.setDebounceTime(DEBOUNCE_TIME);
+  button04.setDebounceTime(DEBOUNCE_TIME);
 }
 
 void configRGBAudio() {
@@ -93,14 +106,16 @@ void configRGBAudio() {
   pinMode(LED_PIN_RGB_02,OUTPUT);
   pinMode(LED_PIN_RGB_03,OUTPUT);
   pinMode(AUDIO_IN,INPUT);
-  digitalWrite(LED_PIN_RGB_01,LOW);
-  digitalWrite(LED_PIN_RGB_02,LOW);
-  digitalWrite(LED_PIN_RGB_03,LOW);
+  digitalWrite(LED_PIN_RGB_01,HIGH);
+  digitalWrite(LED_PIN_RGB_02,HIGH);
+  digitalWrite(LED_PIN_RGB_03,HIGH);
 }
 
 void runOnOffLeds(String valueSerial, String queue) {
   button01.loop(); // MUST call the loop() function first
   button02.loop();
+  button03.loop();
+  button04.loop();
   if(button01.isPressed() || (queue.equals("leds") && valueSerial.equals("L0") && onSerialRead[1] == 1)) {
     ledState[0] = !ledState[0];
     sendToEsp(String(ledState[0]) + "0");
@@ -113,11 +128,23 @@ void runOnOffLeds(String valueSerial, String queue) {
     sendToEsp(String(ledState[1]) + "1");
     digitalWrite(LED_PIN_02, ledState[1]); 
     onSerialRead[1] = 0;
+  }
+  if(button03.isPressed() || (queue.equals("leds") && valueSerial.equals("L2") && onSerialRead[1] == 1)) {
+    ledState[2] = !ledState[2];
+    sendToEsp(String(ledState[2]) + "2");
+    digitalWrite(LED_PIN_03, ledState[2]); 
+    onSerialRead[1] = 0;
   } 
+  if(button04.isPressed() || (queue.equals("leds") && valueSerial.equals("L3") && onSerialRead[1] == 1)) {
+    ledState[3] = !ledState[3];
+    sendToEsp(String(ledState[3]) + "3");
+    digitalWrite(LED_PIN_04, ledState[3]); 
+    onSerialRead[1] = 0;
+  }  
 }
 
 void runRGBLights(String valueSerial, String queue) {
-  if(queue.equals("rgb") && onSerialRead[1] == 1) {
+  if(queue.equals("rgb") && rgbPanelEnable && onSerialRead[1] == 1) {
     int red = 0, green = 0, blue = 0;
     red   = valueSerial.toInt();
     String greenS = getValue(valueSerial, ',', 1);
@@ -127,74 +154,63 @@ void runRGBLights(String valueSerial, String queue) {
     onSerialRead[1] = 0;
     // Con constrain nos aseguramos de que el valor esté en el rango del pwm
     //Para leds de anodo común utiliza, para rojo, por ejemplo: red = 255 - constrain(red, 0, 255);
-    red   = constrain(red, 0, 255);
-    green = constrain(green, 0, 255);
-    blue  = constrain(blue, 0, 255);
+    red   = 255 - constrain(red, 0, 255);
+    green = 255 - constrain(green, 0, 255);
+    blue  = 255 - constrain(blue, 0, 255);
     analogWrite(LED_PIN_RGB_01, red);
     analogWrite(LED_PIN_RGB_02, green);
     analogWrite(LED_PIN_RGB_03, blue);
   }
-    /*
-    if (Serial.read() == '*') {
-     
-
-      Serial.print(red, HEX);
-      Serial.print(green, HEX);
-      Serial.println(blue, HEX);
-
-      fade(redPin, red, red_old);
-      fade(greenPin, green, green_old);
-      fade(bluePin, blue, blue_old);
-      
-      Serial.println("Color conseguido");
-      //Almacenamos los datos de color anteriores.
-      red_old = red;
-      green_old = green;
-      blue_old = blue;
-    onSerialRead[1] = 0;
-  }
-    
-  /***** Automatic Mod ****************/
-  /*switch (valueSerial) {
-    case 'P':
-      int volumenAudio = analogRead(AUDIO_IN);
-      Serial.println(volumenAudio);
-      if(volumenAudio < 515) volumenAudio = 496; 
-      int variacionSalida = map(volumenAudio,496,600,0,255);
-      analogWrite(LED_PIN_RGB_01,variacionSalida);
-    break;
   
-    case 'p':
-    break;
+  if(rgbAudioEnable) {
+    int randomNumber;
+    int volumenAudio;
+    unsigned long currentMillis = millis();
+    if (currentMillis - previousMillis >= intervalAudioRGB) {
+      previousMillis = currentMillis;
+      volumenAudio = digitalRead(AUDIO_IN);
+      if(volumenAudio) {
+      randomNumber = random(0,3);
+      switch(randomNumber) {
+        case 0: 
+          digitalWrite(LED_PIN_RGB_01,LOW);
+          break;
+        case 1: 
+          digitalWrite(LED_PIN_RGB_02,LOW);
+          break;
+        case 2: 
+          digitalWrite(LED_PIN_RGB_03,LOW);
+          break;
+        }
+      }
+      else {
+        digitalWrite(LED_PIN_RGB_01,HIGH);
+        digitalWrite(LED_PIN_RGB_02,HIGH);
+        digitalWrite(LED_PIN_RGB_03,HIGH);
+      }
+    }
   }
-  if(valueSerial == 'P') { 
-    
-  }*/
-  /*
-  if(iSAutomaticMod) {
-    int volumenAudio = analogRead(AUDIO_IN);
-    Serial.println(volumenAudio);
-    if(volumenAudio < 515) volumenAudio = 496; 
-    int variacionSalida = map(volumenAudio,496,600,0,255);
-    analogWrite(LED_PIN_RGB_01,variacionSalida);
-  }
-  else {
-    analogWrite(LED_PIN_RGB_01,valueSerial);
-    analogWrite(LED_PIN_RGB_02,valueSerial);
-    analogWrite(LED_PIN_RGB_03,valueSerial);
-  }*/
 }
 
 void checkRGBstatus(String value, String queue) {
   if(queue.equals("control") && onSerialRead[1] == 1) {
     if(value.equals("Y")) {
       rgbEnable = HIGH;
+      rgbPanelEnable = HIGH;
+      rgbAudioEnable = LOW;
     }
     else if(value.equals("N")) {
       rgbEnable = LOW;
-      digitalWrite(LED_PIN_RGB_01,LOW);
-      digitalWrite(LED_PIN_RGB_02,LOW);
-      digitalWrite(LED_PIN_RGB_03,LOW);
+      rgbPanelEnable = LOW;
+      rgbAudioEnable = LOW;
+      digitalWrite(LED_PIN_RGB_01,HIGH);
+      digitalWrite(LED_PIN_RGB_02,HIGH);
+      digitalWrite(LED_PIN_RGB_03,HIGH);
+    }
+    else if(value.equals("A")) {
+      rgbEnable = HIGH;
+      rgbAudioEnable = HIGH;
+      rgbPanelEnable = LOW;
     }
     onSerialRead[1] = 0;
   }
