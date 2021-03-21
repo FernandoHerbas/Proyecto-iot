@@ -34,7 +34,7 @@ int rgbEnable = LOW;
 int rgbAudioEnable = LOW;
 int rgbPanelEnable = LOW;
 unsigned long previousMillis = 0; 
-const long intervalAudioRGB = 30;
+const long intervalAudioRGB = 50;
 
 /**** Declaracion de funciones ***************/
 String checkConnection(String&);
@@ -164,11 +164,10 @@ void runRGBLights(String valueSerial, String queue) {
   
   if(rgbAudioEnable) {
     int randomNumber;
-    int volumenAudio;
+    int volumenAudio = digitalRead(AUDIO_IN);;
     unsigned long currentMillis = millis();
     if (currentMillis - previousMillis >= intervalAudioRGB) {
       previousMillis = currentMillis;
-      volumenAudio = digitalRead(AUDIO_IN);
       if(volumenAudio) {
       randomNumber = random(0,3);
       switch(randomNumber) {
