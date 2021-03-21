@@ -1,7 +1,7 @@
 package Domain.Controllers.jwt;
 
-import Domain.Entities.Usuarios.Administrador;
-import Domain.Entities.Usuarios.Usuario;
+import Domain.Entities.Usuario.Rol;
+import Domain.Entities.Usuario.Usuario;
 import Domain.Repositories.Repositorio;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -38,7 +38,7 @@ public class TokenService {
     public final String newToken(Usuario user) {
         DefaultClaims claims = new DefaultClaims();
         claims.setSubject(new Integer(user.getId()).toString());
-        if(user.getClass().equals(Administrador.class))
+        if(user.getClass().equals(Rol.class))
             claims.put(ROL,"Administrador");
         else
             claims.put(ROL,"Estandar");

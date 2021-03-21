@@ -1,26 +1,34 @@
-package Domain.Entities.Usuarios;
+package Domain.Entities.Usuario;
 
 
 import Domain.Entities.EntidadPersistente.EntidadPersistente;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
-public abstract class Usuario extends EntidadPersistente {
+@Entity
+@Table(name = "usuario")
+public class Usuario extends EntidadPersistente {
 
     @Column(name = "username")
-    protected String username;
+    private String username;
 
     @Column
-    protected String nombre;
+    private String nombre;
 
     @Column
-    protected String apellido;
+    private String apellido;
 
-    @Column(name = "contrasenia")
-    protected String contrasenia;
+    @Column(name = "password")
+    private String password;
 
     @Column
-    protected String mail;
+    private String mail;
+
+    @ManyToOne
+    private Rol rol;
 
     public String getUsername() {
         return username;
@@ -46,12 +54,12 @@ public abstract class Usuario extends EntidadPersistente {
         this.apellido = apellido;
     }
 
-    public String getContrasenia() {
-        return contrasenia;
+    public String getPassword() {
+        return password;
     }
 
-    public void setContrasenia(String contrasenia) {
-        this.contrasenia = contrasenia;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getMail() {
@@ -61,4 +69,13 @@ public abstract class Usuario extends EntidadPersistente {
     public void setMail(String mail) {
         this.mail = mail;
     }
+
+    public Rol getRol() {
+        return rol;
+    }
+
+    public void setRol(Rol rol) {
+        this.rol = rol;
+    }
+
 }

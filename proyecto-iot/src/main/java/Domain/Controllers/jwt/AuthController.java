@@ -1,21 +1,5 @@
 package Domain.Controllers.jwt;
 
-import Domain.Entities.Usuarios.Administrador;
-import Domain.Entities.Usuarios.Usuario;
-import Domain.Repositories.Repositorio;
-import com.google.common.hash.Hashing;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-import spark.Request;
-import spark.Response;
-
-import javax.persistence.NoResultException;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 /*
 public class AuthController extends AbstractTokenController{
     private static final String TOKEN_PREFIX = "Bearer";

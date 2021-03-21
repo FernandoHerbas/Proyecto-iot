@@ -1,6 +1,6 @@
 package Domain.Controllers.jwt;
 
-import Domain.Entities.Usuarios.Usuario;
+import Domain.Entities.Usuario.Usuario;
 import spark.Request;
 
 public abstract class AbstractTokenController {

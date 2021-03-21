@@ -7,7 +7,6 @@ import javax.persistence.*;
 @MappedSuperclass
 public class EntidadPersistente {
     @Expose
-    @TableGenerator(name = "entidad_secuencia")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
