@@ -32,6 +32,10 @@ public class Usuario extends EntidadPersistente {
     @ManyToOne
     private Rol rol;
 
+    public Usuario() {
+
+    }
+
     public String getUsername() {
         return username;
     }

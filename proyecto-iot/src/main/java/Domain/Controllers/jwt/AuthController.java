@@ -48,7 +48,7 @@ public class AuthController extends AbstractTokenController{
         if (validatePost(jsonRequest)) {
             try {
                 usuario = (Usuario) EntityManagerHelper
-                        .createQuery("from Usuario where username = :username and contrasenia = :password")
+                        .createQuery("from Usuario where username = :username and password = :password")
                         .setParameter("username", jsonRequest.get(USER_NAME_PROPERTY).getAsString())
                         .setParameter("password", passwordHash)
                         .getSingleResult();
@@ -78,11 +78,7 @@ public class AuthController extends AbstractTokenController{
 
     public String me(Request request, Response response) {
         Usuario user = getUserFromToken(request);
-        Gson gson = new GsonBuilder()
-                .excludeFieldsWithoutExposeAnnotation()
-                .serializeNulls()
-                .create();
-
+        Gson gson = new Gson();
         JsonObject usuarioResponse = new JsonObject();
 
         usuarioResponse.addProperty("nombre",user.getNombre());

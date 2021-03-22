@@ -16,6 +16,10 @@ public class Rol extends EntidadPersistente {
     @Column
     private String nombre;
 
+    public Rol() {
+
+    }
+
     public String getNombre() {
         return nombre;
     }

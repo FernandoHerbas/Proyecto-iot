@@ -1,5 +1,6 @@
 package Domain.Controllers.jwt;
 
+import Domain.Controllers.DTO.ResponseDTO;
 import com.google.gson.Gson;
 import spark.Filter;
 import spark.Request;
@@ -7,7 +8,7 @@ import spark.Response;
 import spark.Spark;
 
 import java.util.logging.Logger;
-/*
+
 public class AuthFilter implements Filter {
     private static final Logger LOG = Logger.getLogger(AuthFilter.class.getName());
 
@@ -24,13 +25,13 @@ public class AuthFilter implements Filter {
 
     private TokenService tokenService;
     private Gson gson;
-    private Respuesta respuesta;
+    private ResponseDTO responseDTO;
 
     public AuthFilter(String authEndpointPrefix, TokenService tokenService) {
         this.authEndpointPrefix = authEndpointPrefix;
         this.tokenService = tokenService;
         this.gson         = new Gson();
-        this.respuesta    = new Respuesta();
+        this.responseDTO = new ResponseDTO();
     }
 
     @Override
@@ -39,16 +40,16 @@ public class AuthFilter implements Filter {
         if (!isLoginRequest(request) && !isRegistrationRequest(request)) {
             String authorizationHeader = request.headers("Authorization");
             if (authorizationHeader == null) {
-                this.respuesta.setCode(401);
-                this.respuesta.setMessage("Autorizacion de header perdido");
-                String jsonResponseError = gson.toJson(this.respuesta);
+                this.responseDTO.setCode(401);
+                this.responseDTO.setMessage("Autorizacion de header perdido");
+                String jsonResponseError = gson.toJson(this.responseDTO);
                 response.body(jsonResponseError);
                 Spark.halt(200,response.body());
 
             } else if (!tokenService.validateToken(authorizationHeader.replace(TOKEN_PREFIX, ""))) {
-                this.respuesta.setCode(401);
-                this.respuesta.setMessage("Token vencido");
-                String jsonResponseError = gson.toJson(this.respuesta);
+                this.responseDTO.setCode(401);
+                this.responseDTO.setMessage("Token vencido");
+                String jsonResponseError = gson.toJson(this.responseDTO);
                 response.body(jsonResponseError);
                 Spark.halt(200,response.body());
             }
@@ -57,9 +58,9 @@ public class AuthFilter implements Filter {
                 return;
             if(isAdminRequests(request)) {
                 if(isEstandar(token)){
-                    this.respuesta.setCode(403);
-                    this.respuesta.setMessage("No posees permisos de administrador");
-                    String jsonResponseError = gson.toJson(this.respuesta);
+                    this.responseDTO.setCode(403);
+                    this.responseDTO.setMessage("No posees permisos de administrador");
+                    String jsonResponseError = gson.toJson(this.responseDTO);
                     response.body(jsonResponseError);
                     Spark.halt(200, response.body());
                 }
@@ -98,4 +99,3 @@ public class AuthFilter implements Filter {
     }
 
 }
-*/

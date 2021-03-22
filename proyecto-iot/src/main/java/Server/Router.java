@@ -1,9 +1,11 @@
 package Server;
 
 import Domain.Controllers.jwt.AuthController;
+import Domain.Controllers.jwt.AuthFilter;
 import Domain.Controllers.jwt.TokenService;
 import Spark.utils.BooleanHelper;
 import Spark.utils.HandlebarsTemplateEngineBuilder;
+import db.EntityManagerHelper;
 import spark.Spark;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 
@@ -40,12 +42,22 @@ public class Router {
 
     private static void rutas() {
         AuthController authController = new AuthController(tokenService);
+        AuthFilter authFilter = new AuthFilter("/api/auth",tokenService);
 
+        /****  Verificacion de credenciales  ******/
+        Spark.before("/api/*",authFilter);
+
+        /****  AuthController          *********/
         Spark.post("/api/auth/login",authController::login );
         Spark.post("/api/auth/logout", authController::logout);
         Spark.get("/api/auth/me", authController::me);
 
-        //Spark.get("/panel", panelController::mostrar, Router.engine);
+        /**** Cierre de entityManager    ********/
+        Spark.after("/api/*",(request, response) -> {
+            if(EntityManagerHelper.getEntityManagerRecent() != null && EntityManagerHelper.getEntityManagerRecent().isOpen()){
+                EntityManagerHelper.closeEntityManager();
+            }
+        });
     }
 
     private static void verificarTareasProgramadas() {
