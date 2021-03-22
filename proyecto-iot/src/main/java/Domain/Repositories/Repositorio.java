@@ -6,11 +6,9 @@ import java.util.List;
 
 public class Repositorio<T> {
     private IDao<T> dao;
-    private Class<T> clase;
 
-    public Repositorio(IDao<T> dao,Class<T> clase){
+    public Repositorio(IDao<T> dao){
         this.dao = dao;
-        this.clase = clase;
     }
 
     public void setDao(IDao<T> dao) {

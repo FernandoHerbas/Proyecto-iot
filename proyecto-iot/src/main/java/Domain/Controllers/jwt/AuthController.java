@@ -1,21 +1,38 @@
 package Domain.Controllers.jwt;
 
-/*
+
+import Domain.Controllers.DTO.ResponseDTO;
+import Domain.Entities.Usuario.Usuario;
+import Domain.Repositories.Repositorio;
+import com.google.common.hash.Hashing;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import db.EntityManagerHelper;
+import spark.Request;
+import spark.Response;
+
+import javax.persistence.NoResultException;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.stream.Collectors;
+
 public class AuthController extends AbstractTokenController{
     private static final String TOKEN_PREFIX = "Bearer";
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String USER_NAME_PROPERTY = "username";
     private static final String PASSWORD_PROPERTY = "password";
+    private static final String ADMIN_PROPERTY = "ADMIN";
 
     private Gson gson;
     private TokenService tokenService;
-    private Respuesta respuesta;
+    private ResponseDTO respuesta;
     private Repositorio<Usuario> repoUsuarios;
 
     public AuthController(TokenService tokenService) {
         super(tokenService);
         this.tokenService = tokenService;
-        this.respuesta    = new Respuesta();
+        this.respuesta    = new ResponseDTO();
     }
 
     public String login(Request request, Response response) throws IOException {
@@ -60,19 +77,18 @@ public class AuthController extends AbstractTokenController{
     }
 
     public String me(Request request, Response response) {
-        Usuario user = getUserDesdeToken(request);
+        Usuario user = getUserFromToken(request);
         Gson gson = new GsonBuilder()
                 .excludeFieldsWithoutExposeAnnotation()
                 .serializeNulls()
                 .create();
 
-        UsuarioResponse usuarioResponse = new UsuarioResponse();
-        usuarioResponse.code            = 200;
-        usuarioResponse.message         = "Ok";
-        usuarioResponse.nombre          = user.getNombre();
-        usuarioResponse.username        = user.getUsername();
-        usuarioResponse.apellido        = user.getApellido();
-        usuarioResponse.email           = user.getMail();
+        JsonObject usuarioResponse = new JsonObject();
+
+        usuarioResponse.addProperty("nombre",user.getNombre());
+        usuarioResponse.addProperty("apellido",user.getApellido());
+        usuarioResponse.addProperty("mail",user.getMail());
+        usuarioResponse.addProperty("rol",user.getRol().getNombre());
 
         String jsonLogin = gson.toJson(usuarioResponse);
 
@@ -84,14 +100,23 @@ public class AuthController extends AbstractTokenController{
         String authorizationHeader = request.headers(AUTHORIZATION_HEADER);
         String token = authorizationHeader.replace(TOKEN_PREFIX, "");
 
-        Usuario user = getUserDesdeToken(request);
+        Usuario user = getUserFromToken(request);
         tokenService.revokeToken(token);
         String refreshedToken = tokenService.newToken(user);
         response.header(AUTHORIZATION_HEADER, TOKEN_PREFIX + " " + refreshedToken);
         return "";
     }
 
-    public String listadoUsuarios(Request request, Response response) {
+    private boolean isAdmin(Usuario usuario) {
+        return usuario.getRol().getNombre().equals(ADMIN_PROPERTY);
+    }
+
+    private boolean validatePost(JsonObject jsonRequest) {
+        return jsonRequest != null && jsonRequest.has(USER_NAME_PROPERTY) && jsonRequest.has(PASSWORD_PROPERTY);
+    }
+
+    /*
+     public String listadoUsuarios(Request request, Response response) {
         this.gson = new GsonBuilder()
                 .excludeFieldsWithoutExposeAnnotation()
                 .serializeNulls()
@@ -129,11 +154,6 @@ public class AuthController extends AbstractTokenController{
         return usuarioParaAdmin;
     }
 
-    private boolean isAdmin(Usuario usuario) {
-        return usuario.getClass().equals(Administrador.class);
-    }
-
-    /*
     private String register(Request request, Response response) throws IOException {
         String json = request.raw().getReader().lines().collect(Collectors.joining());
         JsonObject jsonRequest = gson.fromJson(json, JsonObject.class);
@@ -158,6 +178,6 @@ public class AuthController extends AbstractTokenController{
         User admin = userService.get("admin");
         admin.assignRole(Role.ADMIN);
         userService.update(admin);
-    }
+    }*/
 
-}*/
+}

@@ -12,7 +12,7 @@ public abstract class AbstractTokenController {
         this.tokenService = tokenService;
     }
 
-    protected Usuario getUserDesdeToken(Request request) {
+    protected Usuario getUserFromToken(Request request) {
         String authorizationHeader = request.headers("Authorization");
         String token = authorizationHeader.replace(TOKEN_PREFIX, "");
         return tokenService.getUser(token);

@@ -2,11 +2,13 @@ package Domain.Entities.Usuario;
 
 
 import Domain.Entities.EntidadPersistente.EntidadPersistente;
+import com.google.common.hash.Hashing;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.nio.charset.StandardCharsets;
 
 @Entity
 @Table(name = "usuario")
@@ -59,7 +61,7 @@ public class Usuario extends EntidadPersistente {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        hashearPassword(password);
     }
 
     public String getMail() {
@@ -76,6 +78,12 @@ public class Usuario extends EntidadPersistente {
 
     public void setRol(Rol rol) {
         this.rol = rol;
+    }
+
+    private void hashearPassword(String contrasenia){
+        this.password = Hashing.sha256()
+                .hashString(contrasenia, StandardCharsets.UTF_8)
+                .toString();
     }
 
 }

@@ -2,6 +2,7 @@ package Domain.Controllers.jwt;
 
 import Domain.Entities.Usuario.Rol;
 import Domain.Entities.Usuario.Usuario;
+import Domain.Repositories.Daos.DaoHibernate;
 import Domain.Repositories.Repositorio;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -27,7 +28,7 @@ public class TokenService {
     public TokenService(String jwtSecretKey) {
         this.jwtSecretKey = jwtSecretKey;
         this.blacklistedTokenRepository = new BlacklistedTokenRepository();
-        //this.repoUsuarios               = new Repositorio<>(new DaoHibernate<>(Usuario.class));
+        this.repoUsuarios               = new Repositorio<>(new DaoHibernate<>(Usuario.class));
         setExpirationTime();
     }
 

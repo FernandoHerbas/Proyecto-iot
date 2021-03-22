@@ -6,9 +6,9 @@ import javax.persistence.*;
 
 @MappedSuperclass
 public class EntidadPersistente {
-    @Expose
+    //@Expose
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
     public int getId() {
