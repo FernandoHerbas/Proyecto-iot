@@ -4,10 +4,10 @@
 // Update these with values suitable for your network.
 
 const char* ssid = "TeleCentro-ef39";
-const char* password = "1164440382";
-const char* mqtt_server = "192.168.0.67";
+const char* password = " ";
+const char* mqtt_server = " ";
 const char* mqtt_user = "fer";                                                                            
-const char* mqtt_password = "42737740";
+const char* mqtt_password = " ";
 #define MAX_CANT_CHAR 32
 
 /**** Global variables ******/
